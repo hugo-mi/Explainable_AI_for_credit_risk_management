@@ -341,12 +341,15 @@ Shapash is a user friendly extension built on top of the Shap framework. It's ma
 As we proceed to evaluate the predictive efficacy of our models, it is imperative to consider three foundational pillars that are critical for credit assessment. These pillars not only guide our expectations but also influence how we interpret the model's performance.
 
 **1. Stability**
+
 The first pillar is the stability of our clients. Given the inherent risks in lending, it is crucial to minimize uncertainties. A primary source of uncertainty is the potential for significant changes in a client's circumstances, such as employment shifts or relocation. Such changes could render the initial credit assessment data obsolete, thereby increasing the financial risks over the loan's duration.
 
 **2. Finances**
+
 The financial soundness of the client's project is the second pillar. Questions to consider include whether the client is financially overextending themselves, whether the project is viable, and if the client can maintain their standard of living while repaying the debt on time. These considerations are vital for a thorough and effective credit assessment.
 
 **3. Trust**
+
 The third pillar focuses on trust. Credit granting is fraught with risks, including unpredictable risks affecting that emanates from unexpected events and accidents, and risks stemming from information asymmetries due to clients concealing relevant information. To foster a sound financial system, efforts must be made to reduce these asymmetries and cultivate trustworthy relationships with clients, thus allowing more flexibility on our part.
 
 For each of these pillars, we have identified a few features that are directly linked to these dimensions and have looked at their impact on credit risks. 
