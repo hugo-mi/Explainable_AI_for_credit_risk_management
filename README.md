@@ -193,7 +193,10 @@ where:
 
 The Total expecred loss of our portfolio is Total expected loss:  \$10,737,417.19
 
-## Explainable AI
+## Explainable AI (XAI)
+
+### Why XAI matters
+The significance of XAI can be seen in several areas. First, it builds trust and confidence by enabling users to understand AI decision-making processes. Second, it helps in evaluating model accuracy and fairness, ensuring that AI systems do not perpetuate biases related to race, gender, age, or location. XAI is also crucial for meeting regulatory requirements, providing transparency, and allowing individuals affected by AI decisions to challenge or comprehend those decisions. Finally, XAI supports operational accountability, enabling organizations to maintain auditability and manage risks associated with AI deployment.
 
 ### Features Permuration Importances
 
@@ -262,9 +265,114 @@ This equation computes the SHAP value for each feature, indicating its contribut
 
 ### Conformal Learning
 
-### DICE
+Conformal learning is a statistical framework that provides a method for constructing predictive models with reliable measures of uncertainty. It is particularly useful in situations where understanding the confidence of predictions is crucial. Unlike traditional machine learning models, which output point predictions or probabilities without a clear indication of their reliability, conformal learning aims to produce prediction sets that are valid with a specified probability.
+
+The core idea behind conformal learning is to use past data to define a conformity measure, which quantifies how typical or atypical a new example is compared to the training data. This measure is then used to determine the prediction interval or set for new examples, ensuring that the true label is contained within this interval with a specified confidence level.
+
+* **Conformity Score:** A measure of how typical or atypical a new credit applicant's data is compared to the historical data used to train the model. Lower scores indicate higher conformity and lower risk.
+* **Calibration:** The process of adjusting conformity scores using a separate calibration set to achieve the desired coverage probability.
+* **Prediction Set:** A range of possible outcomes for a new applicant that is guaranteed to include the true outcome with a specified confidence level (e.g., 95\%).
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/conformal_learning.png)
+
+#### Coverage Values
+
+These coverage values help evaluate the reliability and accuracy of the conformal prediction model at different confidence levels.
+
+The statistics for each alpha value provide insights into the distribution of conformity scores relative to the specified confidence intervals. Let's interpret these results:
+* **Alpha: 0.2**
+   * Below: 61,502
+   * Above: 15,376
+
+**Interpretation:** 
+For $\alpha = 0.2$, the threshold is set such that 80\% of the conformity scores in the calibration set fall below it. Therefore, 80\% of the predictions for the test set are within the specified confidence interval, indicating moderate confidence.
+
+* **Alpha: 0.1**
+   * Below: 69,190
+   * Above: 7,688
+     
+**Interpretation:**
+For $\alpha = 0.1$, the threshold is set to include 90\% of the conformity scores. Thus, 90\% of the test set predictions fall within the confidence interval, providing higher confidence compared to $\alpha = 0.2$.
+
+* **Alpha: 0.05**
+   * Below: 73,034
+   * Above: 3,844
+
+**Interpretation:** 
+For $\alpha = 0.05$, the threshold includes 95\% of the conformity scores, resulting in 95\% of the test set predictions being within the confidence interval, indicating the highest level of confidence.
+
+### Counterfactual Analysis with DICE
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/dicedice.png)
+
+Counterfactual analysis is a crucial tool for enhancing decision-making processes in credit scoring. The DICE (Diverse Counterfactual Explanations) framework operates by generating alternative scenarios that could lead to different outcomes. For example, if a customer's loan application is rejected, DICE can suggest specific changes the customer can make to their financial profile to improve their chances of approval in the future.
+
+For the bank, DICE helps identify risk boundaries, inform decision-making, and ensure compliance with regulations. By understanding the counterfactual scenarios, banks can delineate clear guidelines on what changes customers need to make to qualify for loans. This not only streamlines the approval process but also aligns with regulatory requirements by providing transparent and justifiable decisions.
+
+For the customer, DICE offers personalized advice, enhances trust, and provides valuable data insights. By showing customers what specific actions they need to take, such as reducing debt or increasing savings, DICE empowers them with actionable steps to improve their financial standing and reapply with a higher likelihood of success. This transparency and guidance foster a stronger, trust-based relationship between the customer and the bank.
+
+The graph depicts the flow of credit request submission, analysis by human or AI, and the outcomes based on counterfactual adjustments. Customers receive installment payments if approved, and if not, they get insights on how to improve and reapply. This cyclical process of adjustment and reapplication underscores the continuous improvement facilitated by DICE, ultimately leading to better financial health for customers and more informed lending decisions for banks.
+
+#### How to use it : an example ?
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/Diceexplanation.png)
+
+Counterfactual analysis with DICE can be illustrated through the following example. 
+
+In the provided tabs, we see a customer's credit application data and we decided to work on two scenarios. These scenarios suggest changes that could lead to different credit approval outcomes.
+
+**1. Initial Data:** The customer's original data includes all the variables. We decided to constraint the model to only leave `AMT\_CREDIT`, `AMT\_ANNUITY`, `AMT\_GOODS\_PRICE`, `RATIO\_CREDIT\_ANNUITY`, `N\_CREDIT\_ACTIVE\_RESID`, and `CAR\_ESTIMATED\_VALUE` to vary. The initial values indicate that the customer's loan request might not be approved due to certain financial metrics and we want to give him some recommendations. 
+
+**2. Scenario 1:** DICE proposes a counterfactual scenario where the AMT\_ANNUITY is significantly reduced to 5259.4. This adjustment increases the `RATIO\_CREDIT\_ANNUITY` to 44.8, which might improve the customer's chances of loan approval by indicating better affordability.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/SC1.png)
+
+**3. Scenario 2:** Another counterfactual scenario suggests a different adjustment, with `AMT\_ANNUITY` remaining high at 40320.0 but modifying `CAR\_ESTIMATED\_VALUE` to 0.063068. This scenario also modifies the `RATIO\_CREDIT\_ANNUITY` to 39.3, which could also be favorable for the customer's creditworthiness.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/scenario2.png)
+
+These examples demonstrate how DICE generates alternative scenarios by adjusting key financial variables. By exploring these counterfactuals, customers can understand the specific changes needed to improve their credit scores and increase their chances of loan approval. For the bank, this process helps in providing personalized advice and making informed lending decisions.
 
 ### Feature Contribution with Shapash
+
+Shapash is a user friendly extension built on top of the Shap framework. It's main advantage is the interactive report that allows users to analyse the most influential features, with a built-in parameter that inverse transforms the preprocessing steps for easier interpretability.
+
+#### Consistency and Logic of Predictions
+
+As we proceed to evaluate the predictive efficacy of our models, it is imperative to consider three foundational pillars that are critical for credit assessment. These pillars not only guide our expectations but also influence how we interpret the model's performance.
+
+**1. Stability**
+The first pillar is the stability of our clients. Given the inherent risks in lending, it is crucial to minimize uncertainties. A primary source of uncertainty is the potential for significant changes in a client's circumstances, such as employment shifts or relocation. Such changes could render the initial credit assessment data obsolete, thereby increasing the financial risks over the loan's duration.
+
+**2. Finances**
+The financial soundness of the client's project is the second pillar. Questions to consider include whether the client is financially overextending themselves, whether the project is viable, and if the client can maintain their standard of living while repaying the debt on time. These considerations are vital for a thorough and effective credit assessment.
+
+**3. Trust**
+The third pillar focuses on trust. Credit granting is fraught with risks, including unpredictable risks affecting that emanates from unexpected events and accidents, and risks stemming from information asymmetries due to clients concealing relevant information. To foster a sound financial system, efforts must be made to reduce these asymmetries and cultivate trustworthy relationships with clients, thus allowing more flexibility on our part.
+
+For each of these pillars, we have identified a few features that are directly linked to these dimensions and have looked at their impact on credit risks. 
+We believe Age and the Number of years a client has been employed for to have a negative impact on the probability of default. Younger clients are more likely to experience impactful changes in their lives as they have more flexible lives. We may also expect this relationship to reverse at latter points in life as health becomes a growing concern. The same reasoning holds for the number of years a client has been employed for, the longer you have been employed the more likely you are to keep being employed. 
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/feature_contribution2.png)
+
+Following the same thought process, we acknowledge that certain professions are more exposed to instabilities potentially due to high turnover in their workplace. We are mostly thinking about low-skill labors and unsecure industries with high turnover such as restaurants, drivers... As we can see in the following graph the model's predictions align with our hypotheses. Low-skill laborers (drivers, cleaning staff, cooking staff, low-skill laborers, laborers) are expected to have a higher probability of default by the model whereas high-skill labor (accountants, medicine staff, core staff) have a negative impact on a clients' probability of default. 
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/feature_contribution.png)
+
+The number of excess credit a client has is expected to be indicative of over-indebtedness and we expect it to be positively correlated with one's probability of default. As we can see from the model's results, this feature is the most influential feature for predicting credit default, thus aligning with our thought process.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/activeresid.png)
+
+The excess amount annuity of a client could be indicative of one's overconfidence in its ability to repay its loan rapidly and thus we expect it to be positively linked to the probability of default. Once again, the model aligns with our expectations with clients having excessive annuity payments being more prone to defaulting.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/amountann.png)
+
+We believe that the number of days our clients misses due payments of loans that meet certain value thresholds is either linked to financial distress, or would indicate a clients lack of commitments towards his contractual obligations. There seems to be a clear positive decreasing relationships between our target and the number of days past due.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/historicaldays.png)
+
+On the other hand, we expect excess down payment to be a signal of our client's commitment towards his contractual obligations by having "skin in the game" and sharing part of the risk with the bank. Furthermore it also indicates that our client's is likely to have cash on hands which could serve as a safety cushion if he were to face financial difficulties. Thus we would expect it to be negatively correlated to credit default. As we can see from the following graph the relation seems clear and aligns with our thought process.
+
+![Alt text](https://github.com/hugo-mi/Explainable_AI_for_credit_risk_management/blob/main/img/meandpayresid.png)
 
 ## Installation
 
@@ -282,7 +390,3 @@ This equation computes the SHAP value for each feature, indicating its contribut
    ```sh
    pip install -r requirements.txt
    ```
-
-## Usage
-
- 
